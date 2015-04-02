@@ -1,11 +1,9 @@
 {% import "macros.html" as macros %}
 {% extends "base.html" %}
 {% block content %}
-<button type=button><a href="/post/add">ADD POST</a></button>
-{% if posts %}
-{% for post in posts %}
+
+{% if post %}
 {{ macros.render_post(post) }}
-{% endfor %}
 {% else %}
 <p>There is no data in table</p>
 {% endif %}
