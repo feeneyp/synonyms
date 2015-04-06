@@ -5,6 +5,9 @@
             <li>
                 {{ post.datetime | dateformat("%d/%m/%y") }}
             </li>
+            <li>
+                by {{ post.author.name }}
+            </li>  
         </ul>
     </div>
     <div class="col-md-10">

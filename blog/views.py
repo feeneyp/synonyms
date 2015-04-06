@@ -36,7 +36,8 @@ def add_post_get():
 def add_post_post():
     post = Post(
       title=request.form["title"],
-      content=mistune.markdown(request.form["content"]),
+      content=mistune.markdown(request.form["content"]), 
+      author=current_user
     )
     session.add(post)
     session.commit()
@@ -47,7 +48,11 @@ def add_post_post():
 @login_required
 def edit_post_get(id):
     post=session.query(Post).get(id)
-    return render_template("edit_post.html", post=post)  
+    if current_user.id == post.author_id:
+        return render_template("edit_post.html", post=post)
+    else:
+        flash("You cannot edit other users' posts.","danger")
+        return redirect(url_for("posts"))
   
   
 @app.route("/post/<id>/edit", methods=["POST"])
