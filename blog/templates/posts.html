@@ -2,6 +2,8 @@
 {% extends "base.html" %}
 {% block content %}
 <button type=button><a href="/post/add">ADD POST</a></button>
+<button type=button><a href="/login">Login</a></button>
+<button type=button><a href="/logout">Logout</a></button>
 {% if posts %}
 {% for post in posts %}
 {{ macros.render_post(post) }}

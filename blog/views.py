@@ -1,7 +1,7 @@
 import mistune
 from flask import render_template, request, redirect, url_for
 from flask import flash
-from flask.ext.login import login_user
+from flask.ext.login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash
 
 from blog import app 
@@ -26,10 +26,13 @@ def post_get(id):
     return render_template("post.html",post=post)  
   
 @app.route("/post/add", methods=["GET"]) #button u click is in posts.html
+@login_required
 def add_post_get():
-    return render_template("add_post.html")
+    return render_template("add_post.html")  
+  
 
 @app.route("/post/add", methods=["POST"]) #button u click is in add_post.html
+@login_required
 def add_post_post():
     post = Post(
       title=request.form["title"],
@@ -41,12 +44,14 @@ def add_post_post():
 
   
 @app.route("/post/<id>/edit", methods=["GET"])
+@login_required
 def edit_post_get(id):
     post=session.query(Post).get(id)
     return render_template("edit_post.html", post=post)  
   
   
 @app.route("/post/<id>/edit", methods=["POST"])
+@login_required
 def edit_post_post(id):
     post=session.query(Post).get(id)
     post.title=request.form["title"]
@@ -55,11 +60,13 @@ def edit_post_post(id):
     return redirect(url_for("posts"))
   
 @app.route("/post/<id>/delete", methods=["GET"])
+@login_required
 def delete_post_get(id):
     post=session.query(Post).get(id)
     return render_template("delete_post.html", post=post)
   
 @app.route("/post/<id>/delete", methods=["POST"])
+@login_required
 def delete_post_post(id):
     post=session.query(Post).get(id)
     session.delete(post)
@@ -68,9 +75,11 @@ def delete_post_post(id):
   
 @app.route("/login", methods=["GET"])
 def login_get():
-    return render_template("login.html")
-
-  
+    if not current_user.is_authenticated():
+        return render_template("login.html")
+    else:
+        flash("You are currently logged in.  To login another user, please log out.", "info")
+        return redirect(url_for("posts"))
   
 @app.route("/login", methods=["POST"])
 def login_post():
@@ -83,3 +92,13 @@ def login_post():
         return redirect(url_for("login_get"))
     login_user(user)
     return redirect(request.args.get('next') or url_for("posts"))
+
+@app.route("/logout")
+def logout():
+    if current_user.is_authenticated():
+        flash("You have been logged out.","info")
+        logout_user()
+        return redirect(url_for("login_get"))
+    else:    
+        flash("You cannot logout.  You are not logged in.  Please log in.", "danger")
+        return redirect(url_for("login_get"))    
