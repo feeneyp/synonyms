@@ -23,7 +23,7 @@ def posts():
 @app.route("/post/<id>")
 def post_get(id):
     post = session.query(Post).get(id)
-    return render_template("post.html",post=post)  
+    return render_template("post.html", post=post)  
   
 @app.route("/post/add", methods=["GET"]) #button u click is in posts.html
 @login_required
@@ -35,9 +35,9 @@ def add_post_get():
 @login_required
 def add_post_post():
     post = Post(
-      title=request.form["title"],
-      content=mistune.markdown(request.form["content"]), 
-      author=current_user
+      title = request.form["title"],
+      content = mistune.markdown(request.form["content"]), 
+      author = current_user
     )
     session.add(post)
     session.commit()
@@ -58,9 +58,9 @@ def edit_post_get(id):
 @app.route("/post/<id>/edit", methods=["POST"])
 @login_required
 def edit_post_post(id):
-    post=session.query(Post).get(id)
-    post.title=request.form["title"]
-    post.content=mistune.markdown(request.form["content"])
+    post = session.query(Post).get(id)
+    post.title = request.form["title"]
+    post.content = request.form["content"]
     session.commit()
     return redirect(url_for("posts"))
   
@@ -100,6 +100,7 @@ def login_post():
 
 @app.route("/logout")
 def logout():
+    print current_user.is_authenticated #this is see if current_user.is_athenticated is a method or property
     if current_user.is_authenticated():
         flash("You have been logged out.","info")
         logout_user()
