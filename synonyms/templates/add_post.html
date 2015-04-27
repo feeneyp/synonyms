@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Add a post!</h1>
+#go in and change the input and textarea html to make it better like in edit_post.html
+<form role="form" method="POST">
+  Title:<br>
+  <input type="text" name="title">
+  <br>
+  Content:<br>
+  <input type="text" name="content">
+  <br><br>
+  <button type="submit">Add Post</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{% import "macros.html" as macros %}
+{% extends "base.html" %}
+{% block content %}
+
+{% if post %}
+{{ macros.render_post(post) }}
+<form method="POST">
+    <button type=submit class="btn btn-default">Confirm Delete Post</button>
+</form>
+<button type=button class="btn btn-default"><a href="/">Cancel Delete</a></button>
+{% else %}
+<p>There is no data in table</p>
+{% endif %}
+
+{% endblock %}

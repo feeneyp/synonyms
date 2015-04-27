@@ -5,11 +5,11 @@ from urlparse import urlparse
 from werkzeug.security import generate_password_hash
 
 # Configure your app to use the testing database
-os.environ["CONFIG_PATH"] = "blog.config.TestingConfig"
+os.environ["CONFIG_PATH"] = "synonyms.config.TestingConfig"
 
-from blog import app
-from blog import models
-from blog.database import Base, engine, session
+from synonyms import app
+from synonyms import models
+from synonyms.database import Base, engine, session
 
 class TestViews(unittest.TestCase):
     def setUp(self):
@@ -20,10 +20,10 @@ class TestViews(unittest.TestCase):
         Base.metadata.create_all(engine)
 
         # Create an example user
-        self.user = models.User(name="Alice", email="alice@example.com",
-                                password=generate_password_hash("test"))
-        session.add(self.user)
-        session.commit()
+#         self.user = models.User(name="Alice", email="alice@example.com",
+#                                 password=generate_password_hash("test"))
+#         session.add(self.user)
+#         session.commit()
         
         
     def simulate_login(self):
@@ -41,13 +41,12 @@ class TestViews(unittest.TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(urlparse(response.location).path, "/")
-        posts = session.query(models.Post).all()
-        self.assertEqual(len(posts), 1)
+        words = session.query(models.Word).all()
+        self.assertEqual(len(words), 1)
 
-        post = posts[0]
-        self.assertEqual(post.title, "Test Post")
-        self.assertEqual(post.content, "<p>Test content</p>\n")
-        self.assertEqual(post.author, self.user)    
+        word = words[0]
+        self.assertEqual(word.content, "<p>Test word content</p>\n")
+#         self.assertEqual(word.author, self.user)    
 
     def testDeletePost(self):  #this is not described in detail in tutorial, only testAddPost is in tutorial
         self.simulate_login()
@@ -60,19 +59,19 @@ class TestViews(unittest.TestCase):
 
         self.assertEqual(response1.status_code, 302)
         self.assertEqual(urlparse(response1.location).path, "/")
-        posts = session.query(models.Post).all()
-        self.assertEqual(len(posts), 1)
+        words = session.query(models.Word).all()
+        self.assertEqual(len(words), 1)
 
 
         
-        #we are testing that post1 is in fact being deleted.  This is the real test.
-        post1 = posts[0]
-        post1_id = post1.id
-        delete_url1 = "/post/" + str(post1.id) + "/delete"
+        #we are testing that word1 is in fact being deleted.  This is the real test.
+        word1 = words[0]
+        word1_id = word1.id
+        delete_url1 = "/post/" + str(word1.id) + "/delete"
         response = self.client.post(delete_url1)
         self.assertEqual(response1.status_code, 302)     
-        post_list = session.query(models.Post).all()
-        self.assertEqual(len(post_list), 0)
+        word_list = session.query(models.Word).all()
+        self.assertEqual(len(word_list), 0)
 
         
         

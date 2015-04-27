@@ -1,9 +1,9 @@
 import os
 from flask.ext.script import Manager
 
-from blog import app
-from blog.models import Post, User
-from blog.database import Base, session
+from synonyms import app
+from synonyms.models import Word #, User
+from synonyms.database import Base, session
 
 from getpass import getpass
 from werkzeug.security import generate_password_hash
@@ -30,9 +30,9 @@ def seed():
 
     for i in range(25):
         word = Word(
-            content=content+"{}".format(i)
+            content=content+"{}".format(i), category="", level=""
         )
-        session.add(post)
+        session.add(word)
     session.commit()   
     
 # @manager.command

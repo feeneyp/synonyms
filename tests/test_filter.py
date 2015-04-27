@@ -3,10 +3,10 @@ import unittest
 import datetime
 
 # Configure your app to use the testing configuration
-os.environ["CONFIG_PATH"] = "blog.config.TestingConfig"
+os.environ["CONFIG_PATH"] = "synonyms.config.TestingConfig"
 
-import blog
-from blog.filters import *
+import synonyms
+from synonyms.filters import *
   
 class FilterTests(unittest.TestCase):
     def testDateFormat(self):

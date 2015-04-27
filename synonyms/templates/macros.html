@@ -1,0 +1,24 @@
+{% macro render_post(post) %}
+<div class="row">
+    <div class="col-md-2 text-right metadata">
+        <ul class="list-unstyled">
+            <li>
+                {{ post.datetime | dateformat("%d/%m/%y") }}
+            </li>
+            <li>
+                by {{ post.author.name }}
+            </li>  
+        </ul>
+    </div>
+    <div class="col-md-10">
+        <a href="/post/{{ post.id }}">
+          <h1>
+              {{ post.title }}
+          </h1>
+        </a> 
+        <button type=button class="btn btn-default"><a href="/post/{{ post.id }}/edit">edit post</a></button>
+        {{ post.content | safe }}
+        <button type=button class="btn btn-default"><a href="/post/{{ post.id }}/delete">Delete post</a></button>
+    </div>
+</div>
+{% endmacro %}
