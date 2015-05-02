@@ -43,19 +43,21 @@ def word_pair_get(id):
   
 @app.route("/word/<id>/pair", methods=["POST"])
 def word_pair_post(id):
-    paired_words = request.form.getlist("paired_words") #request checkbox values (word id's)
-    paired_words = map(int, paired_words)
+    new_paired_words = request.form.getlist("new_paired_words") #request checkbox values (a list of id's)
+    #convert list of str to list of integers
+    new_paired_words = map(int, new_paired_words)
     #convert list of word id's to list of word objects
-    #to pair two words you need two word objects 
-    list = []
-    for i in paired_words:
+    #to pair two words you need two word objects.  Since my checkbox results are id's I need to iterate.. 
+    word = session.query(Word).get(id)
+    list = word.right_nodes
+    for i in new_paired_words:
         word_object = session.query(Word).get(i)
         list.append(word_object)
-    paired_words = list
-    print  paired_words
+    all_paired_words = list
+    print  all_paired_words
     #create the association of the main word with each of the other word objects from the list
     word = session.query(Word).get(id)
-    word.right_nodes = paired_words
+    word.right_nodes = all_paired_words
     session.commit()
     return redirect(url_for('words'))
   

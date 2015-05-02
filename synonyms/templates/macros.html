@@ -20,7 +20,7 @@
           </h1>
         </a>
         {% if with_checkbox %}
-        <input type="checkbox" name="paired_words" value="{{post.id}}">Pair with me</input>
+        <input type="checkbox" name="new_paired_words" value="{{post.id}}">Pair with me</input>
         {% endif %}
         <button type=button class="btn btn-default"><a href="/post/{{ post.id }}/edit">edit word</a>        </button>
         {{ post.content | safe }}
