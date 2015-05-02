@@ -2,18 +2,19 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!-- This displays the word being paired with others -->
-{{macros.render_post(word,false,false)}} 
+{{macros.render_post(word, with_checkbox=false, with_pair_button=false)}} <!-- displays main word -->
 <hr>
 {% if posts %}
 <form method="POST">
     <button type=submit class="btn btn-default">Pair with checked words below</button>
-    <!-- This displays the filter list. Only the other words will appear. -->
+    <!-- This displays the filter list. Only words that are not already 
+    among the right-nodes appear -->
     {% for post in posts %}
-    {% if post.id==word.id %}
+    <!-- Avoids displaying the main word OR words that are already paired with it -->
+    {% if post.id==word.id or post in word.right_nodes %} 
     pass
     {% else %}
-    {{ macros.render_post(post,false,true) }}
+    {{ macros.render_post(post,with_checkbox=false, with_pair_button=true) }}
     {% endif %}
 {% endfor %}
 </form>
