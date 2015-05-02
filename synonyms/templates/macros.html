@@ -29,7 +29,12 @@
         <button type=button class="btn btn-default"><a href="/word/{{ post.id }}/pair">Pair word</a></button>
         {% endif %}
         {% if post.right_nodes[0] %}
-        <span>Paired with word(s): {{ post.right_nodes[0].id | safe }}</span>
+            <h4>Paired with word(s):</h4>
+            <ul>
+            {% for nodes in post.right_nodes %}
+              <li>{{ nodes.id | safe }}</li>
+            {% endfor %}
+            </ul>  
         {% endif %}
 <!--         {{ post.category | safe }}
         {{ post.level | safe }} -->
