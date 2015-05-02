@@ -21,6 +21,8 @@ def words():
  
 @app.route("/words", methods=["GET"])
 def words_get_with_filter():
+#displays all words or only a filtered lists if url entered contains 0-3 search terms
+#in the following order   /words?category_like=noun&level_like=easy&title_like=obsequious
     """ Get a list of words"""
     # Get the querystring arguments if any
     category_like = request.args.get("category_like")
@@ -29,20 +31,33 @@ def words_get_with_filter():
     print title_like
     # Get and filter the posts from the database
     words = session.query(Word)
-#     if category_like or level_like or title_like:
-#         words = words.filter(Word.category.contains(category_like))
-#         words = words.filter(Word.level.contains(level_like))
-    words = words.filter(Word.title.contains(title_like))
+    if category_like:
+        words = words.filter(Word.category.contains(category_like))
+    if level_like:
+        words = words.filter(Word.level.contains(level_like))
+    if title_like:
+        words = words.filter(Word.title.contains(title_like))
     words = words.all()
     return render_template("words.html", posts=words)
 
 @app.route("/search", methods=["POST"])
+#gets search term from the search box
 def words_search():
     """ Get search terms and reload words"""
     search_term = request.form["search_box"]
     search_url = "/words?" + "title_like=" + search_term
     return redirect(search_url)
-    
+
+@app.route("/search_for_pairs_for/<id>", methods=["POST"])
+#gets search term from the search box
+def words_search_from_pairing(id):
+    """ Get search terms and reload words"""
+    search_term = request.form["search_box"]
+    words = session.query(Word)
+    word = session.query(Word).get(id)
+    words = words.filter(Word.title.contains(search_term))
+    words = words.all()
+    return render_template("pair_filter.html", word=word, posts=words)
     
   
 @app.route("/word/<id>/pair", methods=["GET"])
