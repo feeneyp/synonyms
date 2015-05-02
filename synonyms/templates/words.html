@@ -6,7 +6,7 @@
 <button type=button><a href="/logout">Logout</a></button>
 {% if posts %}
 {% for post in posts %}
-{{ macros.render_post(post) }}
+{{ macros.render_post(post,true,false) }}
 {% endfor %}
 {% else %}
 <p>There is no data in table</p>

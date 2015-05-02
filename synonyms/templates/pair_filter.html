@@ -1,0 +1,18 @@
+{% import "macros.html" as macros %}
+{% extends "base.html" %}
+{% block content %}
+
+{{macros.render_post(word,false,false)}}
+<hr>
+{% if posts %}
+<form method="POST">
+    <button type=submit class="btn btn-default">Pair with checked words below</button>
+{% for post in posts %}
+{{ macros.render_post(post,false,true) }}
+{% endfor %}
+</form>
+{% else %}
+<p>There is nothing to pair with</p>
+{% endif %}
+
+{% endblock %}

@@ -7,7 +7,7 @@ from werkzeug.security import check_password_hash
 from synonyms import app 
 from .database import session
 from .models import Word
-# from .models import User
+from .models import User
 
 
 
@@ -16,14 +16,54 @@ def words():
     words = session.query(Word)
     words = words.order_by(Word.datetime.desc())
     words = words.all()
-    return render_template("words.html",
-        words=words
-    )
+    return render_template("words.html", posts=words)
+  
+ 
+@app.route("/words", methods=["GET"])
+def words_get():
+    """ Get a list of words"""
+    # Get the querystring arguments
+    category_like = request.args.get("category_like")
+    level_like = request.args.get("level_like")
+
+    # Get and filter the posts from the database
+    words = session.query(Word)
+    if category_like and level_like:
+        words = words.filter(Word.category.contains(category_like))
+        words = words.filter(Word.level.contains(level_like))
+    words = words.all()
+    return render_template("words.html", posts=words)
+
+  
+@app.route("/word/<id>/pair", methods=["GET"])
+def word_pair_get(id):
+    word = session.query(Word).get(id)
+    posts = session.query(Word).all()
+    return render_template("pair_filter.html", word=word, posts=posts)  
+  
+@app.route("/word/<id>/pair", methods=["POST"])
+def word_pair_post(id):
+    paired_words = request.form.getlist("paired_words") #request checkbox values (word id's)
+    paired_words = map(int, paired_words)
+    #convert list of word id's to list of word objects
+    #to pair two words you need two word objects 
+    list = []
+    for i in paired_words:
+        word_object = session.query(Word).get(i)
+        list.append(word_object)
+    paired_words = list
+    print  paired_words
+    #create the association of the main word with each of the other word objects from the list
+    word = session.query(Word).get(id)
+    word.right_nodes = paired_words
+    session.commit()
+    return redirect(url_for('words'))
+  
   
 @app.route("/post/<id>")
 def post_get(id):
     post = session.query(Word).get(id)
-    return render_template("post.html", post=post)  
+    return render_template("word.html", post=post)  
   
 @app.route("/post/add", methods=["GET"]) #button u click is in words.html
 @login_required
@@ -36,12 +76,14 @@ def add_post_get():
 def add_post_post():
     post = Word(
       title = request.form["title"],
-      content = mistune.markdown(request.form["content"]), 
+      content = mistune.markdown(request.form["content"]),
+      category = mistune.markdown(request.form["category"]),
+      level = mistune.markdown(request.form["level"]),
       author = current_user
     )
     session.add(post)
     session.commit()
-    return redirect(url_for("posts"))
+    return redirect(url_for("words"))
 
   
 @app.route("/post/<id>/edit", methods=["GET"])
@@ -52,7 +94,7 @@ def edit_post_get(id):
         return render_template("edit_post.html", post=post)
     else:
         flash("You cannot edit other users' posts.","danger")
-        return redirect(url_for("posts"))
+        return redirect(url_for("words"))
   
   
 @app.route("/post/<id>/edit", methods=["POST"])
@@ -62,7 +104,7 @@ def edit_post_post(id):
     post.title = request.form["title"]
     post.content = request.form["content"]
     session.commit()
-    return redirect(url_for("posts"))
+    return redirect(url_for("words"))
   
 @app.route("/post/<id>/delete", methods=["GET"])
 @login_required
@@ -76,7 +118,12 @@ def delete_post_post(id):
     post=session.query(Word).get(id)
     session.delete(post)
     session.commit()
-    return redirect(url_for("posts"))
+    return redirect(url_for("words"))
+
+
+  
+  
+  
   
 @app.route("/login", methods=["GET"])
 def login_get():
@@ -84,7 +131,7 @@ def login_get():
         return render_template("login.html")
     else:
         flash("You are currently logged in.  To login another user, please log out.", "info")
-        return redirect(url_for("posts"))
+        return redirect(url_for("words"))
   
 @app.route("/login", methods=["POST"])
 def login_post():

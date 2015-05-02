@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h1>Add a post!</h1>
+<h1>Add a word!</h1>
 #go in and change the input and textarea html to make it better like in edit_post.html
 <form role="form" method="POST">
   Title:<br>
@@ -10,8 +10,14 @@
   <br>
   Content:<br>
   <input type="text" name="content">
+  <br>
+  Category:<br>
+  <input type="text" name="category">
+  <br>
+  Level:<br>
+  <input type="text" name="level">
   <br><br>
-  <button type="submit">Add Post</button>
+  <button type="submit">Add Word</button>
 </form>
 
 {% endblock %}

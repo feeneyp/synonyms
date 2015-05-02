@@ -3,7 +3,7 @@
 {% block content %}
 
 {% if post %}
-{{ macros.render_post(post) }}
+{{ macros.render_post(post,true,false) }}
 {% else %}
 <p>There is no data in table</p>
 {% endif %}

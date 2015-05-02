@@ -19,11 +19,11 @@ class TestViews(unittest.TestCase):
         # Set up the tables in the database
         Base.metadata.create_all(engine)
 
-        # Create an example user
-#         self.user = models.User(name="Alice", email="alice@example.com",
-#                                 password=generate_password_hash("test"))
-#         session.add(self.user)
-#         session.commit()
+        Create an example user
+        self.user = models.User(name="Alice", email="alice@example.com",
+                                password=generate_password_hash("test"))
+        session.add(self.user)
+        session.commit()
         
         
     def simulate_login(self):
@@ -45,8 +45,8 @@ class TestViews(unittest.TestCase):
         self.assertEqual(len(words), 1)
 
         word = words[0]
-        self.assertEqual(word.content, "<p>Test word content</p>\n")
-#         self.assertEqual(word.author, self.user)    
+        self.assertEqual(words.content, "<p>Test word content</p>\n")
+        self.assertEqual(words.author, self.user)    
 
     def testDeletePost(self):  #this is not described in detail in tutorial, only testAddPost is in tutorial
         self.simulate_login()
