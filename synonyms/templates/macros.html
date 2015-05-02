@@ -1,4 +1,4 @@
-{% macro render_post(post,with_pair_button,with_checkbox) %}
+{% macro render_post(post,with_edit_button,with_delete_button,with_pair_button,with_checkbox) %}
 <div class="row">
     <div class="col-md-2 text-right metadata">
         <ul class="list-unstyled">
@@ -22,9 +22,13 @@
         {% if with_checkbox %}
         <input type="checkbox" name="new_paired_words" value="{{post.id}}">Pair with me</input>
         {% endif %}
+        {% if with_edit_button %}
         <button type=button class="btn btn-default"><a href="/post/{{ post.id }}/edit">edit word</a>        </button>
+        {% endif %}
         {{ post.content | safe }}
+        {% if with_delete_button %}
         <button type=button class="btn btn-default"><a href="/post/{{ post.id }}/delete">Delete word</a></button>
+        {% endif %}
         {% if with_pair_button %}
         <button type=button class="btn btn-default"><a href="/word/{{ post.id }}/pair">Pair word</a></button>
         {% endif %}

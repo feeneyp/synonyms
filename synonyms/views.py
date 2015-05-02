@@ -20,20 +20,30 @@ def words():
   
  
 @app.route("/words", methods=["GET"])
-def words_get():
+def words_get_with_filter():
     """ Get a list of words"""
-    # Get the querystring arguments
+    # Get the querystring arguments if any
     category_like = request.args.get("category_like")
     level_like = request.args.get("level_like")
-
+    title_like = request.args.get("title_like")
+    print title_like
     # Get and filter the posts from the database
     words = session.query(Word)
-    if category_like and level_like:
-        words = words.filter(Word.category.contains(category_like))
-        words = words.filter(Word.level.contains(level_like))
+#     if category_like or level_like or title_like:
+#         words = words.filter(Word.category.contains(category_like))
+#         words = words.filter(Word.level.contains(level_like))
+    words = words.filter(Word.title.contains(title_like))
     words = words.all()
     return render_template("words.html", posts=words)
 
+@app.route("/search", methods=["POST"])
+def words_search():
+    """ Get search terms and reload words"""
+    search_term = request.form["search_box"]
+    search_url = "/words?" + "title_like=" + search_term
+    return redirect(search_url)
+    
+    
   
 @app.route("/word/<id>/pair", methods=["GET"])
 def word_pair_get(id):
@@ -59,7 +69,7 @@ def word_pair_post(id):
     word = session.query(Word).get(id)
     word.right_nodes = all_paired_words
     session.commit()
-    return redirect(url_for('words'))
+    return render_template("pair_filter.html", word=word, posts=posts)  
   
   
 @app.route("/post/<id>")

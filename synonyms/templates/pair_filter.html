@@ -2,7 +2,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-{{macros.render_post(word, with_checkbox=false, with_pair_button=false)}} <!-- displays main word -->
+{{macros.render_post(word)}} <!-- displays main word -->
 <hr>
 {% if posts %}
 <form method="POST">
@@ -11,10 +11,8 @@
     among the right-nodes appear -->
     {% for post in posts %}
     <!-- Avoids displaying the main word OR words that are already paired with it -->
-    {% if post.id==word.id or post in word.right_nodes %} 
-    pass
-    {% else %}
-    {{ macros.render_post(post,with_checkbox=false, with_pair_button=true) }}
+    {% if not(post.id==word.id or post in word.right_nodes) %} 
+    {{ macros.render_post(post,with_checkbox=true) }}
     {% endif %}
 {% endfor %}
 </form>
