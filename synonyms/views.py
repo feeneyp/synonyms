@@ -73,19 +73,28 @@ def word_pair_post(id):
     new_paired_words = map(int, new_paired_words)
     #convert list of word id's to list of word objects
     #to pair two words you need two word objects.  Since my checkbox results are id's I need to iterate.. 
+    posts = session.query(Word)
     word = session.query(Word).get(id)
+    #get list of all previously paired words
     list = word.right_nodes
     for i in new_paired_words:
         word_object = session.query(Word).get(i)
         list.append(word_object)
     all_paired_words = list
-    print  all_paired_words
     #create the association of the main word with each of the other word objects from the list
-    word = session.query(Word).get(id)
     word.right_nodes = all_paired_words
     session.commit()
     return render_template("pair_filter.html", word=word, posts=posts)  
-  
+
+@app.route("/unpair/<left_node_id>/<right_node_id>", methods=["POST"])
+def unpair(left_node_id,right_node_id):
+    print "unpairing <left_node_id> and <right_node_id>"
+    posts = session.query(Word)
+    left_word = session.query(Word).get(left_node_id)
+    right_word = session.query(Word).get(right_node_id)
+    right_list = left_word.right_nodes
+    right_list.remove(right_word)
+    return render_template("pair_filter.html", word=left_word, posts=posts) 
   
 @app.route("/post/<id>")
 def post_get(id):
@@ -170,7 +179,7 @@ def login_post():
         flash("Incorrect username or password", "danger")
         return redirect(url_for("login_get"))
     login_user(user)
-    return redirect(request.args.get('next') or url_for("posts"))
+    return redirect(request.args.get('next') or url_for("words"))
 
 @app.route("/logout")
 def logout():

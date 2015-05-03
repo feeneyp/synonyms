@@ -20,7 +20,7 @@
           </h1>
         </a>
         {% if with_checkbox %}
-        <input type="checkbox" name="new_paired_words" value="{{post.id}}">Pair with me</input>
+        <input type="checkbox" name="new_paired_words" value="{{post.id}}"> Pair with this word</input>
         {% endif %}
         {% if with_edit_button %}
         <button type=button class="btn btn-default"><a href="/post/{{ post.id }}/edit">edit word</a>        </button>
@@ -32,13 +32,18 @@
         {% if with_pair_button %}
         <button type=button class="btn btn-default"><a href="/word/{{ post.id }}/pair">Pair word</a></button>
         {% endif %}
-        {% if post.right_nodes[0] %}
+        {% if post.right_nodes %}
             <h4>Paired with word(s):</h4>
-            <ul>
-            {% for nodes in post.right_nodes %}
-              <li>{{ nodes.id | safe }}</li>
+<!--             <ul> -->
+            {% for node in post.right_nodes %}
+<!--               <li> -->
+                  {{ node.id | safe }}
+                  <form method="POST" action="/unpair/{{ post.id }}/{{ node.id }}">
+                  <button type=submit>Unpair {{ post.id }} and {{ node.id }}</button></form>
+                  </br>
+<!--               </li>   -->
             {% endfor %}
-            </ul>  
+<!--             </ul>   -->
         {% endif %}
 <!--         {{ post.category | safe }}
         {{ post.level | safe }} -->
