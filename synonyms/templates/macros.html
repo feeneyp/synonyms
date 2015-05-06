@@ -34,16 +34,16 @@
         {% endif %}
         {% if post.right_nodes %}
             <h4>Paired with word(s):</h4>
-<!--             <ul> -->
+            <ul>
             {% for node in post.right_nodes %}
-<!--               <li> -->
-                  {{ node.id | safe }}
+              <li>
+                  {{ node.title | safe }} (id={{ node.id | safe }})
                   <form method="POST" action="/unpair/{{ post.id }}/{{ node.id }}">
                   <button type=submit>Unpair {{ post.id }} and {{ node.id }}</button></form>
                   </br>
-<!--               </li>   -->
+              </li>  
             {% endfor %}
-<!--             </ul>   -->
+            </ul>  
         {% endif %}
 <!--         {{ post.category | safe }}
         {{ post.level | safe }} -->
