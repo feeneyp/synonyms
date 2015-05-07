@@ -26,12 +26,15 @@ def run():
     
 @manager.command
 def seed():
+    titles = ["Lorem","ipsum","dolor","sit","amet"]
     content = """Lorem ipsum."""
-
-    for i in range(10):
+    user = User(name="George")
+    session.add(user)
+    for i in titles:
         word = Word(
-            content=content, category="", level=""
+            title=i, content=content, category="noun", level="easy"
         )
+        word.author = user
         session.add(word)
     session.commit()   
     

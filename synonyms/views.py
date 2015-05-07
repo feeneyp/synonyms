@@ -126,11 +126,11 @@ def add_post_post():
 @login_required
 def edit_post_get(id):
     post=session.query(Word).get(id)
-    if current_user.id == post.author.id:
-        return render_template("edit_post.html", post=post)
-    else:
-        flash("You cannot edit other users' posts.","danger")
-        return redirect(url_for("words"))
+#     if current_user.id == post.author.id:
+    return render_template("edit_post.html", post=post)
+#     else:
+#         flash("You cannot edit other users' posts.","danger")
+#         return redirect(url_for("words"))
   
   
 @app.route("/post/<id>/edit", methods=["POST"])
